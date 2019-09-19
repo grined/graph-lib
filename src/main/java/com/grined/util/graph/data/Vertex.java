@@ -1,7 +1,7 @@
 package com.grined.util.graph.data;
 
 public class Vertex<V> {
-    private V value;
+    private final V value;
 
     public Vertex(V value) {
         this.value = value;
@@ -9,10 +9,6 @@ public class Vertex<V> {
 
     public V getValue() {
         return value;
-    }
-
-    public void setValue(V value) {
-        this.value = value;
     }
 
     @Override
