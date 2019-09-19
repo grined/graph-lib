@@ -3,6 +3,7 @@ package com.grined.util.graph;
 import com.grined.util.graph.data.Edge;
 import com.grined.util.graph.data.Vertex;
 import com.grined.util.graph.exception.NoSuchVertexException;
+import com.grined.util.graph.exception.NoPathException;
 
 import java.util.*;
 
@@ -33,7 +34,11 @@ public class DirectedGraph<V> implements Graph<V> {
     public List<Edge<V>> getPath(Vertex<V> from, Vertex<V> to) {
         checkIfVertexExist(from);
         checkIfVertexExist(to);
-        return findPath(from, to, new HashSet<>(), new ArrayList<>());
+        List<Edge<V>> path = findPath(from, to, new HashSet<>(), new ArrayList<>());
+        if (path == null) {
+            throw new NoPathException(from, to);
+        }
+        return path;
     }
 
     private List<Edge<V>> findPath(Vertex<V> current,
@@ -50,16 +55,17 @@ public class DirectedGraph<V> implements Graph<V> {
         visitedVertices.add(current);
         return edges.stream()
                 .filter(Objects::nonNull)
-                .filter(edge -> !visitedVertices.contains(getOppositeEdgeSide(edge, current)))
+                .filter(edge -> !visitedVertices.contains(getOppositeVertexOnEdge(edge, current)))
                 .map(edge -> {
                     currentPath.add(edge);
-                    return findPath(getOppositeEdgeSide(edge, current), to, visitedVertices, currentPath);
+                    return findPath(getOppositeVertexOnEdge(edge, current), to, visitedVertices, currentPath);
                 })
+                .filter(Objects::nonNull)
                 .findAny()
                 .orElse(null);
     }
 
-    private Vertex<V> getOppositeEdgeSide(Edge<V> edge, Vertex<V> current) {
+    private Vertex<V> getOppositeVertexOnEdge(Edge<V> edge, Vertex<V> current) {
         return edge.getFrom() == current ? edge.getTo() : edge.getFrom();
     }
 
@@ -68,5 +74,4 @@ public class DirectedGraph<V> implements Graph<V> {
             throw new NoSuchVertexException(vertex);
         }
     }
-
 }
