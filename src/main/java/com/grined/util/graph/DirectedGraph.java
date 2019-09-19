@@ -24,11 +24,10 @@ public class DirectedGraph<V> implements Graph<V> {
     public Edge<V> addEdge(Vertex<V> from, Vertex<V> to) {
         checkIfVertexExist(from);
         checkIfVertexExist(to);
-        Edge<V> newEdge = new Edge<>(from, to, true);
+        Edge<V> newEdge = new Edge<>(from, to);
         vertexEdges.get(from).add(newEdge);
         return newEdge;
     }
-
 
     @Override
     public List<Edge<V>> getPath(Vertex<V> from, Vertex<V> to) {
@@ -39,6 +38,10 @@ public class DirectedGraph<V> implements Graph<V> {
             throw new NoPathException(from, to);
         }
         return path;
+    }
+
+    Map<Vertex<V>, List<Edge<V>>> getVertexEdges() {
+        return vertexEdges;
     }
 
     private List<Edge<V>> findPath(Vertex<V> current,
@@ -69,7 +72,7 @@ public class DirectedGraph<V> implements Graph<V> {
         return edge.getFrom() == current ? edge.getTo() : edge.getFrom();
     }
 
-    private void checkIfVertexExist(Vertex<V> vertex) {
+   private void checkIfVertexExist(Vertex<V> vertex) {
         if (!vertexEdges.containsKey(vertex)) {
             throw new NoSuchVertexException(vertex);
         }
