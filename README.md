@@ -11,3 +11,6 @@
 * Add weighted edges support in your lib.
 * Add traverse function that will take a user defined function and apply it on every vertex of the graph.
 * Make you graphs thread safe.
+
+### How to test
+Clone a project and check `src/test` folder. You can run existing unit tests or create tests yourself.
